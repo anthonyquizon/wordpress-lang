@@ -1,9 +1,0 @@
-
-
-
-(*
-
-AddAction AdminMenu 
-AddMenuPage "Videos" ""
-
-*)
