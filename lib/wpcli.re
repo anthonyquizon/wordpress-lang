@@ -6,7 +6,6 @@ let new_install (config:Config.config) => {
       run "rm" ["-rf", config.path] >>
       run "mkdir" ["-p", config.path] >>
       run "wp" ["core", "download", "--path=" ^ config.path] >> 
-      /* TODO theme */
       run "wp" [
       "config", "create", 
       "--path=" ^ config.path, 
@@ -23,5 +22,19 @@ let new_install (config:Config.config) => {
       "--admin_user=" ^ config.admin.user,
       "--admin_password=" ^ config.admin.pass,
       "--admin_email=" ^ config.admin.email
+      ] >>
+      /* TODO move */
+      run "cp" ["-r", config.theme.src, config.path ^ "/wp-content/themes/" ^ config.theme.name] >>
+      run "wp" [
+        "theme", "activate", config.theme.name,
+        "--path=" ^ config.path
       ])
+};
+
+let update_theme (config:Config.config) => {
+  let dst = config.path ^ "/wp-content/themes/" ^ config.theme.name;
+  eval (
+    run "rm" ["-rf", dst] >>
+    run "cp" ["-r", config.theme.src, dst]
+  );
 };

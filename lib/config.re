@@ -1,6 +1,7 @@
 
 type theme_config = {
-  name: string
+  name: string,
+  src: string /* TODO build theme using types */
 };
 
 type db_config = {
@@ -44,7 +45,8 @@ let default_config = {
     pass: "root"
   },
   theme: {
-    name: "hello"
+    name: "theme",
+    src: "./theme"
   }
 };
 

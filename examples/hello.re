@@ -1,4 +1,6 @@
 
+let theme = "";
+
 let default = Lib.Config.default_config;
 let config = {
   ...default,
@@ -10,6 +12,10 @@ let config = {
     name: "local_hello_com",
     user: "root",
     pass: "root"
+  },
+  theme: {
+    name: "hello",
+    src: "./examples/hello"
   }
 };
 
