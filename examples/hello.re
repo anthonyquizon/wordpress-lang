@@ -8,7 +8,8 @@ let config = {
   db: {
     ...default.db,
     name: "local_hello_com",
-    pass: ""
+    user: "root",
+    pass: "root"
   }
 };
 

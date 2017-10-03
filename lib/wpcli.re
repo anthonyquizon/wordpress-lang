@@ -18,10 +18,10 @@ let new_install (config:Config.config) => {
       run "wp" [
       "core", "install", 
       "--path=" ^ config.path, 
+      "--url=" ^ config.url, 
       "--title=" ^ config.title,
       "--admin_user=" ^ config.admin.user,
       "--admin_password=" ^ config.admin.pass,
       "--admin_email=" ^ config.admin.email
-      ]
-      )
+      ])
 };
