@@ -4,5 +4,7 @@ let wordpress config => {
     | [|_, _, "update"|] => Wpcli.update_theme config;
     | _ => Wpcli.new_install config;
   }
+
+  /* TODO compile reasonml bs js */
 };
 
