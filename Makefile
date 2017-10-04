@@ -2,6 +2,13 @@
 build:
 	jbuilder build
 
-run/example/hello: 
+install:
+	jbuilder build
+	jbuilder install
+
+build/example/hello: 
 	./_build/default/examples/hello.exe
+
+update/example/hello: 
+	./_build/default/examples/hello.exe update
 
