@@ -45,8 +45,12 @@ let upload (config:Config.config) => {
     |> J.Basic.Util.to_list;
 
   let posts = List.map Decode.post postsJson;
+
+  /* create WXR file */
+
+
   let r = Str.regexp "Success: Created post " ;
-  
+
   List.iter (fun p => {
     let postRet = S.eval (
       S.run "wp" [

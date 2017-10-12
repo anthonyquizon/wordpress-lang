@@ -26,8 +26,19 @@ let run (config:Config.config) => {
     "--admin_password=" ^ config.admin.pass,
     "--admin_email=" ^ config.admin.email
     ] >>
+    S.run "wp" [
+      "plugin", 
+      "install", 
+      "wordpress-importer", 
+      "--activate",
+      "--path=" ^ config.path
+    ] >>
     /* TODO move */
-    S.run "cp" ["-r", config.theme.src, config.path ^ "/wp-content/themes/" ^ config.theme.name] >>
+    S.run "cp" [
+      "-r", 
+      config.theme.src, 
+      config.path ^ "/wp-content/themes/" ^ config.theme.name
+    ] >>
     S.run "wp" [
       "theme", "activate", config.theme.name,
       "--path=" ^ config.path
