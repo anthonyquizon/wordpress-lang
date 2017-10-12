@@ -1,0 +1,18 @@
+{
+  "posts": [
+    { 
+      "title": "hello",
+      "meta": [
+        { "key": "hello", "value": "one", "file": false },
+        { "key": "there", "value": "two", "file": false }
+      ]
+    },
+    { 
+      "title": "there",
+      "meta": [
+        { "key": "hello", "value": "one", "file": false },
+        { "key": "there", "value": "two", "file": false }
+      ]
+    }
+  ]
+}

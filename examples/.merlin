@@ -5,6 +5,9 @@ PKG base
 PKG base.caml
 PKG base.shadow_stdlib
 PKG bigarray
+PKG biniou
+PKG easy-format
+PKG mysql
 PKG posixat
 PKG sexplib
 PKG sexplib.0
@@ -14,7 +17,9 @@ PKG shexp.bigstring-io
 PKG shexp.process
 PKG shexp.sexp
 PKG spawn
+PKG str
 PKG threads
 PKG threads.posix
 PKG unix
+PKG yojson
 S ../lib

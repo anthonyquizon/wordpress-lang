@@ -1,10 +1,13 @@
 
-let wordpress config => {
-  switch (Sys.argv) {
-    | [|_, "update"|] => Wpcli.update_theme config;
-    | _ => Wpcli.new_install config;
-  }
+module J = Yojson;
 
-  /* TODO compile reasonml bs js */
+let wordpress config::configPath => {
+  let config = Config.parse configPath;
+
+  switch (Sys.argv) {
+    | [|_, "update"|] => Install.update_theme config
+    | [|_, "posts"|] => Posts.upload config
+    | _ => Install.run config;
+  };
 };
 

@@ -3,6 +3,6 @@
 (library
  ((name        lib)
   (public_name wordpress_dsl)
-  (libraries (shexp shexp.process))))
+  (libraries (shexp shexp.process yojson mysql str))))
 
 
