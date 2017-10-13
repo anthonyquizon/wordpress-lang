@@ -2,6 +2,7 @@
   "posts": [
     { 
       "title": "hello",
+      "post_type": "post",
       "meta": [
         { "key": "hello", "value": "one", "file": false },
         { "key": "there", "value": "two", "file": false }
@@ -9,6 +10,7 @@
     },
     { 
       "title": "there",
+      "post_type": "post",
       "meta": [
         { "key": "hello", "value": "one", "file": false },
         { "key": "there", "value": "two", "file": false }
