@@ -1,12 +1,14 @@
 
 module J = Yojson;
 
-let wordpress config::configPath => {
-  let config = Config.parse configPath;
+let wordpress () => {
+  let config = Config.parse Sys.argv.(1);
 
   switch (Sys.argv) {
-    | [|_, "update"|] => Install.update_theme config
-    | [|_, "posts"|] => Posts.upload config
+    | [|_, _, "update"|] => Install.update_theme config
+    | [|_, _, "posts"|] => {
+      Posts.upload config
+    }
     | _ => Install.run config;
   };
 };

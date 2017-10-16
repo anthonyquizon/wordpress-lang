@@ -8,8 +8,7 @@
     "email": "admin@admin.com"
   },
   "db": {
-    "host": "localhost",
-    "port": 3306,
+    "host": "127.0.0.1",
     "name": "local_hello_com",
     "user": "root",
     "pass": "root"
@@ -20,6 +19,18 @@
   },
   "posts": {
     "json": "./examples/posts.json",
-    "uploads": "./examples/uploads/"
+    "uploads": "./examples/uploads/",
+    "remote": {
+      "db": {
+        "user": "root",
+        "host": "127.0.0.1",
+        "name": "remote_hello_com"
+      },
+      "ssh": {
+        "user": "anthonyquizon",
+        "host": "127.0.0.1",
+        "path": "~/Development/Work/Libraries/wordpress-dsl/examples/output-ssh"
+      }
+    }
   }
 }

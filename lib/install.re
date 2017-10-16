@@ -1,3 +1,4 @@
+
 open Shexp_process.Infix;
 
 module S = Shexp_process;
@@ -10,7 +11,7 @@ let run (config:Config.config) => {
     S.run "wp" [
     "config", "create", 
     "--path=" ^ config.path, 
-    "--dbhost=" ^ config.db.host ^ ":" ^ (string_of_int config.db.port),
+    "--dbhost=" ^ config.db.host,
     "--dbname=" ^ config.db.name,
     "--dbuser=" ^ config.db.user,
     "--dbpass=" ^ config.db.pass

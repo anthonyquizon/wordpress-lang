@@ -3,13 +3,6 @@ open Shexp_process.Infix;
 module J = Yojson;
 module S = Shexp_process;
 
-/* 
-  TODO validate posts with theme build
-
-  Read JSON -> ADT structure
-  upload posts via wp
-*/
-
 type key = string;
 type url = string;
 
@@ -44,7 +37,7 @@ module WXR = {
     Cow.Xml.(
       tag "item" (list [
         tag "wp:post_type" (string "attachment"),
-        tag "wp:attachment_url" (string x),
+        tag "wp:attachment_url" (string ("http://local.hello.com/wp-content/uploads/" ^ x)),
         tag "wp:post_meta" (list [
           tag "wp:meta_key" (string "_wp_attached_file"),
           tag "wp:meta_value" (string x)
@@ -116,23 +109,28 @@ let write_tmp str => {
 };
 
 let upload (config:Config.config) => {
+  let remote = config.posts.remote;
+
   let posts = J.Basic.from_file config.posts.json 
     |> J.Basic.Util.member "posts" 
     |> J.Basic.Util.to_list
     |> List.map Decode.post;
   
-  let media = contents config.posts.uploads;
+  let r = Str.regexp config.posts.uploads;
+  let media = contents config.posts.uploads 
+           |> List.map (Str.replace_first r "");
+
   let wxr = WXR.posts posts media |> Cow.Xml.to_string;
   let tmp_file = write_tmp wxr;
 
-  print_string tmp_file;
-
   S.eval (
     S.run "cp" ["-r", config.posts.uploads, config.path ^ "/wp-content/uploads/"] >>
-    S.run "wp" ["import", tmp_file, "--authors=create", "--path=" ^ config.path]);
+    S.run "wp" ["import", tmp_file, "--authors=create", "--path=" ^ config.path] >>
+    S.run "scp" [ "-r", config.posts.uploads, remote.ssh.user ^ "@" ^ remote.ssh.host ^ ":" ^ remote.ssh.path ]
+    );
 
-  /* upload uploads folder */
-  /* upload sql post table */
-  /* upload sql post meta table */
+  S.eval(
+    S.run "mysqldump"  ["--host=" ^ config.db.host, "--user=" ^ config.db.user, "--password=" ^ config.db.pass, config.db.name, "wp_posts", "wp_postmeta"] 
+      |- S.run "mysql" ["--host="^ remote.db.host, "--user=" ^ remote.db.user, "-p", remote.db.name]);
 };
 

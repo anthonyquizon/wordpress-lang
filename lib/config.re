@@ -6,16 +6,33 @@ type theme_config = {
   src: string
 };
 
+type posts_db_config = {
+  user: string,
+  host: string,
+  name: string
+};
+
+type posts_ssh_config = {
+  user: string,
+  host: string,
+  path: string
+};
+
+type posts_remote_config = {
+  db: posts_db_config,
+  ssh: posts_ssh_config
+};
+
 type posts_config = {
   json: string,
-  uploads: string
+  uploads: string,
+  remote: posts_remote_config
 };
 
 type db_config = {
   host: string,
   name: string,
   user: string,
-  port: int,
   pass: string
 };
 
@@ -43,16 +60,36 @@ module Decode = {
       src: json |> member "src" |> to_string /* TODO delete */
     };
 
+  let posts_db json => 
+    J.Basic.Util.{
+      user: json |> member "user" |> to_string,
+      host: json |> member "host" |> to_string,
+      name: json |> member "name" |> to_string
+    };
+
+  let posts_ssh json => 
+    J.Basic.Util.{
+      user: json |> member "user" |> to_string,
+      host: json |> member "host" |> to_string,
+      path: json |> member "path" |> to_string
+    };
+
+  let posts_remote json => 
+    J.Basic.Util.{
+      db: json |> member "db" |> posts_db,
+      ssh: json |> member "ssh" |> posts_ssh
+    };
+
   let posts json => 
     J.Basic.Util.{
       json: json |> member "json" |> to_string,
-      uploads: json |> member "uploads" |> to_string /* TODO delete */
+      uploads: json |> member "uploads" |> to_string,
+      remote: json |> member "remote" |> posts_remote
     };
 
   let db json => 
     J.Basic.Util.{
       host: json |> member "host" |> to_string,
-      port: json |> member "port" |> to_int,
       name: json |> member "name" |> to_string,
       user: json |> member "user" |> to_string,
       pass: json |> member "pass" |> to_string,

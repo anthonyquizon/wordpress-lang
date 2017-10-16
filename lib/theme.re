@@ -4,14 +4,6 @@ type url = string;
 type title = string;
 type filepath = string;
 
-/*
-module type COMPILE = {
-  type t;
-  val compile : t -> string
-};
-type compile a = (module COMPILE with type t = a);
-*/
-
 type menuPage = 
   | Jetpack 
   | Edit 

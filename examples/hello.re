@@ -17,6 +17,5 @@ let theme = Theme [
 ];
 */
 
-
-Lib.Wordpress.wordpress config::"./examples/config.json";
+Lib.Wordpress.wordpress ();
 

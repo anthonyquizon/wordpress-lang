@@ -1,2 +1,2 @@
 
-./_build/default/examples/hello.exe $@
+./_build/default/examples/hello.exe ./examples/config.local.json $@
