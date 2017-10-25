@@ -1,4 +1,4 @@
-B ../_build/default/lib
+B ../_build/default/src
 FLG -open Lib -w -40
 PKG base
 PKG base.caml

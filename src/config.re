@@ -19,6 +19,7 @@ type posts_ssh_config = {
 };
 
 type posts_remote_config = {
+  url: string,
   db: posts_db_config,
   ssh: posts_ssh_config
 };
@@ -26,6 +27,7 @@ type posts_remote_config = {
 type posts_config = {
   json: string,
   uploads: string,
+  url: string,
   remote: posts_remote_config
 };
 
@@ -76,6 +78,7 @@ module Decode = {
 
   let posts_remote json => 
     J.Basic.Util.{
+      url: json |> member "url" |> to_string,
       db: json |> member "db" |> posts_db,
       ssh: json |> member "ssh" |> posts_ssh
     };
@@ -84,6 +87,7 @@ module Decode = {
     J.Basic.Util.{
       json: json |> member "json" |> to_string,
       uploads: json |> member "uploads" |> to_string,
+      url: json |> member "url" |> to_string,
       remote: json |> member "remote" |> posts_remote
     };
 

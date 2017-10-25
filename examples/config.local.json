@@ -20,7 +20,9 @@
   "posts": {
     "json": "./examples/posts.json",
     "uploads": "./examples/uploads/",
+    "url": "http://local.hello.com",
     "remote": {
+      "url": "http://local.hello.com",
       "db": {
         "user": "root",
         "host": "127.0.0.1",

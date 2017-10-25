@@ -7,7 +7,10 @@ let wordpress () => {
   switch (Sys.argv) {
     | [|_, _, "update"|] => Install.update_theme config
     | [|_, _, "posts"|] => {
-      Posts.upload config
+      Posts.Local.upload config
+    }
+    | [|_, _, "posts", "remote"|] => {
+      Posts.Remote.upload config
     }
     | _ => Install.run config;
   };

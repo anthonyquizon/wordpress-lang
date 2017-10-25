@@ -5,7 +5,7 @@
       "post_type": "post",
       "meta": [
         { "key": "hello", "value": "one", "file": false },
-        { "key": "there", "value": "two", "file": false }
+        { "key": "there", "value": "2017/10/test.png", "file": true }
       ]
     },
     { 
