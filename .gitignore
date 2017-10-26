@@ -2,4 +2,5 @@ output/
 output-ssh/
 _build/
 *.install
+.merlin
 

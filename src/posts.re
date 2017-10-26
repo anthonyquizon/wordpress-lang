@@ -33,7 +33,13 @@ module Decode = {
 };
 
 module WXR = {
-  let mediaIdOffs = 100;
+  let mediaIdOffs = ref 100;
+
+  let getMediaID () => {
+    let i = !mediaIdOffs;
+    mediaIdOffs := i + 1;
+    i;
+  };
 
   let isFile m => switch m.file {
     | Some true => true
@@ -86,7 +92,7 @@ module WXR = {
   let collectMedia ps => {
     List.fold_left (fun acc p => {
       let metas = List.filter isFile p.meta 
-               |> List.mapi (fun i x => (i + mediaIdOffs, x.value));
+               |> List.map (fun x => (getMediaID (), x.value));
 
       List.append acc metas;
     }) [] ps; 
@@ -151,6 +157,17 @@ module Local = {
         S.run "cp" ["-r", config.posts.uploads, config.path ^ "/wp-content/uploads/"] >>
         S.run "wp" ["import", tmp_file, "--authors=create", "--path=" ^ config.path]);
   };
+
+  let upload' (config:Config.config) (posts:list post) => {
+    let wxr = WXR.posts posts config.posts.url |> Cow.Xml.to_string;
+    let tmp_file = write_tmp wxr;
+
+    print_string wxr;
+
+    S.eval (
+        S.run "cp" ["-r", config.posts.uploads, config.path ^ "/wp-content/uploads/"] >>
+        S.run "wp" ["import", tmp_file, "--authors=create", "--path=" ^ config.path]);
+  };
 };
 
 module Remote = {
@@ -162,7 +179,6 @@ module Remote = {
       |> J.Basic.Util.to_list
       |> List.map Decode.post;
 
-    let r = Str.regexp config.posts.uploads;
     let wxr = WXR.posts posts remote.url |> Cow.Xml.to_string;
     let tmp_file = write_tmp wxr;
 
