@@ -162,8 +162,6 @@ module Local = {
     let wxr = WXR.posts posts config.posts.url |> Cow.Xml.to_string;
     let tmp_file = write_tmp wxr;
 
-    print_string wxr;
-
     S.eval (
         S.run "cp" ["-r", config.posts.uploads, config.path ^ "/wp-content/uploads/"] >>
         S.run "wp" ["import", tmp_file, "--authors=create", "--path=" ^ config.path]);
