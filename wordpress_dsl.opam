@@ -1,9 +1,0 @@
-opam-version: "1.21"
-version: "1.0"
-build: [
-  ["jbuilder" "build" "-p" name "--root" "." "-j" jobs]
-]
-depends: [
-  "jbuilder" {build} 
-  "reason"
-]

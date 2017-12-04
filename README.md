@@ -7,15 +7,15 @@
   * upload database
   * upload uploads folder
 
-## WP Language Example
+## WP Language Examples
+### Install
 ```
-
 # comment
-as theme
-  name: "<theme-name>"
-  path: "./<theme>/"
+theme of
+  name: "theme-name"
+  path: "./theme/"
 
-as db
+db of
   Host: ""
   Name: ""
   User: ""
@@ -29,31 +29,25 @@ run in "../webroot"
 
 ```
 
-### Remote Example
+### Remote Content Sync
 ```
 # comment
-as theme
+theme of
   name: "theme-name"
   path: "./theme/"
 
-as db
+db of
   Host: "host"
   Name: "name"
   User: <input> # do not save secret credentials in script
   Pass: <input> # prompt user instead
 
 # TODO sync
-
-run in "../webroot"
-  create db
-  plugin "wordpress-importer"
-  plugin "post-types-order"
-  theme theme
 ```
 
-### Content Example
+### Content Generation Example
 ```
-as db
+db of
   Host: "host"
   Name: "name"
   User: <input>
@@ -64,3 +58,9 @@ as db
 # TODO number meta
 
 ```
+
+### Admin JSON serialization / post 
+
+### Server side react rendering
+
+

@@ -1,8 +1,5 @@
 
-build:
-	jbuilder build
+.PHONY: test
 
-install:
-	jbuilder build
-	jbuilder install
-
+test: 
+	raco test wordpress/test

@@ -1,0 +1,6 @@
+#lang wordpress
+
+theme of
+  name: "theme-name"
+  # TODO post custom fields
+  path: "./theme/"

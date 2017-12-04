@@ -1,6 +1,0 @@
-(jbuild_version 1)
-
-(library
- ((name        lib)
-  (public_name wp_theme)
-  (libraries (cow))))

@@ -1,4 +1,3 @@
-#lang racket
 
 ;; variable 
 
@@ -12,7 +11,6 @@
 
 ;; uploads
   
-
 ;; plugin
   ;; activate
 
@@ -21,7 +19,18 @@
   ;; cp tmp into webroot/wp-content/theme
   ;; activate
 
+;; migrate
+  ;; search and replace site url
 #|
 
 |#
+
+
+#lang br/quicklang
+
+(define-macro (jsonic-module-begin PARSE-TREE)
+              #'(#%module-begin
+                 (display "hello")))
+
+(provide (rename-out [jsonic-module-begin #%module-begin]))
 

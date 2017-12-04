@@ -1,0 +1,8 @@
+#lang wordpress
+
+db of
+  Host: ""
+  Name: ""
+  User: <input>
+  Pass: <input> 
+

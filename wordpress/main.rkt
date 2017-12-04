@@ -1,10 +1,7 @@
 #lang br/quicklang
 
 (module reader br
-  (require "reader.rkt")
+  (require "lang/reader.rkt")
 
   (provide read-syntax))
-
-
-
 
