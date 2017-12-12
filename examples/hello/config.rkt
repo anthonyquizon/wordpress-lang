@@ -1,20 +1,19 @@
 #lang s-exp wordpress
 
+(name "hello-example")
 (path "./output/webroot")
 
-#|
-(db
-  [host ""]
-  [name ""]
-  [user <input>]
-  [pass <input>])
+(database
+  [host "localhost"]
+  [name "local_hello_com"]
+  [user "root"]
+  [pass "root"])
 
 (theme
-  [name "theme-name"]
-  [path "./theme/"]
-  [post_per_page, 9999]
+  [posts_per_page 9999]
   [scripts "js/app.dist.js"])
 
+#|
 (admin
   [remove_from_menu 
     "jetpack"
