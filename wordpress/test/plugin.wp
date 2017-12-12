@@ -1,7 +1,0 @@
-#lang wordpress
-
-config of
-  plugin "wordpress-importer"
-  plugin "post-types-order"
-  plugin "super-cache"
-
