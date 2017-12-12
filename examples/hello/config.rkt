@@ -3,15 +3,15 @@
 (name "hello-example")
 (path "./output/webroot")
 
-(database
-  [host "localhost"]
-  [name "local_hello_com"]
-  [user "root"]
-  [pass "root"])
+;(database
+  ;[host "localhost"]
+  ;[name "local_hello_com"]
+  ;[user "root"]
+  ;[pass "root"])
 
-(theme
-  [posts_per_page 9999]
-  [scripts "js/app.dist.js"])
+;(theme
+  ;[posts_per_page 9999]
+  ;[scripts "js/app.dist.js"])
 
 #|
 (admin
@@ -37,9 +37,22 @@
 (api
   
   )
-
-(plugin
-  "wordpress-importer"
-  "post-types-order"
-  "super-cache")
 |#
+
+;(acf
+  ;[group 
+    ;[id "acf-group"]
+    ;[title "ACF Title"]
+    ;[fields
+      ;(text 
+        ;[id "field_1232121421"] 
+        ;[label "Field Foo"] 
+        ;[name "field_foo"])]])
+
+;; search first in ./plugins folder 
+;; else try to download via wp cli
+;(plugins
+  ;"wordpress-importer"
+  ;"post-types-order"
+  ;"super-cache")
+
