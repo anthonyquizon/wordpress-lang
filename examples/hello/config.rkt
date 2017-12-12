@@ -1,17 +1,25 @@
 #lang s-exp wordpress
 
-(name "hello-example")
-(path "./output/webroot")
+(name "Hello Example")
+(url "Hello Example")
+(path "./output")
 
-;(database
-  ;[host "localhost"]
-  ;[name "local_hello_com"]
-  ;[user "root"]
-  ;[pass "root"])
+(admin
+  [user "admin"]
+  [pass "admin"]
+  [email "admin@admin.com"])
 
-;(theme
-  ;[posts_per_page 9999]
-  ;[scripts "js/app.dist.js"])
+(database
+  [host "127.0.0.1"]
+  [name "local_hello_com"]
+  [user "root"]
+  [pass "root"]
+  ;;TODO cached db
+  )
+
+(theme
+  [posts_per_page 9999]
+  [scripts "js/app.dist.js"])
 
 #|
 (admin
@@ -51,8 +59,9 @@
 
 ;; search first in ./plugins folder 
 ;; else try to download via wp cli
-;(plugins
-  ;"wordpress-importer"
-  ;"post-types-order"
-  ;"super-cache")
+
+(plugins
+  "wordpress-importer"
+  "post-types-order"
+  "super-cache")
 

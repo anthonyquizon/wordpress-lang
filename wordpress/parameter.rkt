@@ -1,5 +1,7 @@
 #lang racket 
 
+;; TODO typed racket
+
 (provide (all-defined-out))
 
 (struct acf-text 
@@ -27,14 +29,19 @@
 (struct database
   (host name user pass))
 
+(struct admin
+  (user pass email))
+
 (struct properties 
-  (name path database theme plugins))
+  (name url path admin database theme plugins))
 
 (define properties-param 
   (make-parameter 
     (properties 
       "" 
+      "" 
       ""
+      (admin "" "" "")
       (database "" "" "" "")
       (theme 30 "")
       (plugins '()))))
