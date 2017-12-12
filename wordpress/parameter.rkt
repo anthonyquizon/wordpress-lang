@@ -21,8 +21,6 @@
 
 (struct acf (groups))
 
-(struct plugins (names))
-
 (struct theme
   (posts_per_page scripts))
 
@@ -44,5 +42,5 @@
       (admin "" "" "")
       (database "" "" "" "")
       (theme 30 "")
-      (plugins '()))))
+      '())))
 

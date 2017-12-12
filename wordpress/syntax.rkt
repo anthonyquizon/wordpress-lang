@@ -55,8 +55,7 @@
 
 (define-syntax-rule (plugins xs ...)
   (let* ([props (p:properties-param)]
-         [plugins '(xs ...)]
-         [props^ (struct-copy p:properties props [plugins plugins])])
+         [props^ (struct-copy p:properties props [plugins '(xs ...)])])
     (p:properties-param props^)))
 
 

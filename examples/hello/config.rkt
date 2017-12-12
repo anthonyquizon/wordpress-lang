@@ -62,6 +62,5 @@
 
 (plugins
   "wordpress-importer"
-  "post-types-order"
-  "super-cache")
+  "wp-super-cache")
 
