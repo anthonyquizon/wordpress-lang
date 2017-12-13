@@ -32,6 +32,9 @@
     (! `(wp db reset --yes ,--path))
     (! `(wp core install ,--path ,--url ,--title ,--admin_user ,--admin_pass ,--admin_email))
 
+    ;;TODO build templates
+    ;;TODO active theme
+
     (for-each
       (lambda [p]
         (let ([plugin-src (string-append "./plugins/" p)]

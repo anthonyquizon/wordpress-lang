@@ -3,9 +3,11 @@
 (require (prefix-in p: "parameter.rkt"))
 (provide (all-defined-out))
 
-(define-syntax-rule (name p)
+(define-syntax-rule (name x)
   (let* ([props (p:properties-param)]
-         [props^ (struct-copy p:properties props [name p])])
+         [props^ (struct-copy p:properties props 
+                              [name x]
+                              [id (string-replace x " " "-")])])
     (p:properties-param props^)))
 
 (define-syntax-rule (url p)

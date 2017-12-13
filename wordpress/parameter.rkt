@@ -31,16 +31,19 @@
   (user pass email))
 
 (struct properties 
-  (name url path admin database theme plugins))
+  (id name url path admin database theme plugins))
+
+(define default-properties
+  (properties 
+    ""
+    "" 
+    "" 
+    ""
+    (admin "" "" "")
+    (database "" "" "" "")
+    (theme 30 "")
+    '()))
 
 (define properties-param 
-  (make-parameter 
-    (properties 
-      "" 
-      "" 
-      ""
-      (admin "" "" "")
-      (database "" "" "" "")
-      (theme 30 "")
-      '())))
+  (make-parameter default-properties))
 

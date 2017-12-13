@@ -4,6 +4,12 @@
 (url "Hello Example")
 (path "./output")
 
+;;TODO author
+;;TODO description
+;;TODO license
+;;TODO text domain
+;;TODO version
+
 (admin
   [user "admin"]
   [pass "admin"]
@@ -14,7 +20,7 @@
   [name "local_hello_com"]
   [user "root"]
   [pass "root"]
-  ;;TODO cached db
+  ;;TODO import cached db
   )
 
 (theme
