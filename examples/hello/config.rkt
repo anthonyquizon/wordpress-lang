@@ -24,6 +24,7 @@
   )
 
 (theme
+  [src "./theme"] ;;copy source files first
   [posts_per_page 9999]
   [scripts "js/app.dist.js"])
 
@@ -54,18 +55,23 @@
 |#
 
 ;(acf
-  ;[group 
-    ;[id "acf-group"]
+  ;(group 
+    ;[key "acf-group"]
     ;[title "ACF Title"]
+    ;[location 
+      ;(== post_type "post")]
     ;[fields
       ;(text 
-        ;[id "field_1232121421"] 
+        ;[key "field_1232121421"] 
         ;[label "Field Foo"] 
-        ;[name "field_foo"])]])
+        ;[name "field_foo"])]
+      ;(image 
+        ;[key "field_23421312"] 
+        ;[label "Field Bar"] 
+        ;[name "field_bar"])))
 
-;; search first in ./plugins folder 
-;; else try to download via wp cli
-
+;; NOTE: searches first in ./plugins folder 
+;;       then tries to download via wp cli
 (plugins
   "wordpress-importer"
   "wp-super-cache")

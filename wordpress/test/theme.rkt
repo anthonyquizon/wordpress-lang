@@ -12,13 +12,15 @@
     (test-case 
       "style.css"
       (around 
-        (p:properties-param 
+        (let ([theme (p:theme "fixtures/theme" 30 "")])
+         (p:properties-param 
           (struct-copy 
             p:properties 
             p:default-properties 
             [id "foo"] 
             [name "foo"] 
-            [path "./output"] ))
+            [path "./output"] 
+            [theme theme])))
         (begin
           (under-test:run)
           (h:check-files-equal? 
@@ -26,5 +28,5 @@
             "./golden/style.css"))
         (h:reset-properties)))))
 
-(run-tests tests)
-
+(module+ test
+  (run-tests tests))

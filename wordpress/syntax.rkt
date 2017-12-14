@@ -48,12 +48,22 @@
 (define-syntax-rule (theme xs ...)
   (let* ([f (lambda [x acc] 
               (match x
+                [`(src ,v) (struct-copy p:theme acc [src v])]
                 [`(posts_per_page ,v) (struct-copy p:theme acc [posts_per_page v])]
                 [`(scripts ,v) (struct-copy p:theme acc [scripts v])]))]
          [props (p:properties-param)]
          [theme (foldl f (p:properties-theme props) '(xs ...))]
          [props^ (struct-copy p:properties props [theme theme])])
     (p:properties-param props^)))
+
+;(define-syntax-rule (acf xs ...)
+  ;(let* ([f (lambda [x acc] 
+              ;(match x
+                ;[`(group ,v) (struct-copy p:acf acc [posts_per_page v])]))]
+         ;[props (p:properties-param)]
+         ;[theme (foldl f (p:properties-theme props) '(xs ...))]
+         ;[props^ (struct-copy p:properties props [theme theme])])
+    ;(p:properties-param props^)))
 
 (define-syntax-rule (plugins xs ...)
   (let* ([props (p:properties-param)]

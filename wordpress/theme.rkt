@@ -16,17 +16,14 @@
                  "/"
                  name))
 
-(define (create-functions-file)
+(define (copy-source-directory)
   (let* ([props (p:properties-param)]
-         [in (open-input-string f:template)]
-         [out (open-output-file (theme-path props))]
-         [data #hash{ 
-                 (admin_menu . #t)
-                 (tpl_name . "woo")
-                 (items . (#hash{(item . "hello")}
-                           #hash{(item . "there")}))}])
-    (r:rast-compile/render in data out)
-    (close-output-port out)))
+         [theme (p:properties-theme props)]
+         [src (p:theme-src theme)] 
+         [dst (theme-path props "")])
+    (if (equal? src "")
+      null
+      (copy-directory/files src dst))))
 
 (define (create-style-file)
   (let* ([props (p:properties-param)]
@@ -34,11 +31,14 @@
          [out (open-output-file (theme-path props "style.css"))]
          [name (p:properties-name props)]
          [data (make-immutable-hash `((name . ,name)))])
+    ;;TODO check if files exists already
+    ;;TODO check if name property exists
     (r:rast-compile/render in data out)
     (close-output-port out)))
 
 (define (run)
   (h:setup-dir (theme-path (p:properties-param) ""))
   ;(create-functions-file)
+  (copy-source-directory)
   (create-style-file))
 
