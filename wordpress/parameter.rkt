@@ -14,11 +14,12 @@
   (user pass email))
 
 (struct properties 
-  (id name url path admin database theme plugins))
+  (id name url path permalinks admin database theme plugins))
 
 (define default-properties
   (properties 
     ""
+    "" 
     "" 
     "" 
     ""

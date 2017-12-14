@@ -13,6 +13,7 @@
            [s:name name]
            [s:url url]
            [s:path path]
+           [s:permalinks permalinks]
            [s:admin admin]
            [s:database database]
            [s:theme theme]

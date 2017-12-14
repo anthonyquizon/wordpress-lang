@@ -14,6 +14,7 @@
          [name (p:properties-name props)]
          [id (p:properties-id props)]
          [path (p:properties-path props)]
+         [permalinks (p:properties-permalinks props)]
          [admin (p:properties-admin props)]
          [plugins (p:properties-plugins props)]
          [database (p:properties-database props)]
@@ -34,6 +35,8 @@
     (! `(wp config create ,--path ,--dbhost ,--dbname ,--dbuser ,--dbpass))
     (! `(wp db reset --yes ,--path))
     (! `(wp core install ,--path ,--url ,--title ,--admin_user ,--admin_pass ,--admin_email))
+    (! `(wp rewrite structure ,permalinks ,--path))
+    
     (! `(cp -r ,(p:theme-src theme) ,(string-append wp-content "/themes/" id)))
     (! `(wp theme activate ,id ,--path))
 

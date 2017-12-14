@@ -4,6 +4,8 @@
 (url "local.hello.com")
 (path "./output")
 
+(permalinks "/post/%postname%/")
+
 (admin
   [user "admin"]
   [pass "admin"]
@@ -16,6 +18,8 @@
   [pass "root"]
   ;;TODO import cached db
   )
+
+;;TODO copy uploads
 
 (theme
   [src "./theme"])

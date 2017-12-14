@@ -20,6 +20,11 @@
          [props^ (struct-copy p:properties props [path p])])
     (p:properties-param props^)))
 
+(define-syntax-rule (permalinks p)
+  (let* ([props (p:properties-param)]
+         [props^ (struct-copy p:properties props [permalinks p])])
+    (p:properties-param props^)))
+
 ;;; TODO create macro to match struct values
 (define-syntax-rule (admin xs ...)
   (let* ([f (lambda [x acc] 
