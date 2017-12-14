@@ -32,7 +32,7 @@
     (! `(wp db reset --yes ,--path))
     (! `(wp core install ,--path ,--url ,--title ,--admin_user ,--admin_pass ,--admin_email))
 
-    ;;TODO build templates
+    ;;TODO copy template files over
     ;;TODO active theme
 
     (for-each

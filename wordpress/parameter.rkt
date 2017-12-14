@@ -4,26 +4,8 @@
 
 (provide (all-defined-out))
 
-(struct acf-field_text 
-  (key label name))
-
-(struct acf-field_image
-  (key label name))
-
-(struct acf-field_select
-  (key label name choices))
-
-(struct acf-field_repeater
-  (key label name choices))
-
-(struct acf_location
-  (operator parameter value))
-
-(struct acf
-  (id title location fields))
-
 (struct theme
-  (src posts_per_page scripts))
+  (src))
 
 (struct database
   (host name user pass))
