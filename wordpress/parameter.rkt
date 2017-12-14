@@ -14,7 +14,7 @@
   (user pass email))
 
 (struct properties 
-  (id name url path admin database theme plugins acf))
+  (id name url path admin database theme plugins))
 
 (define default-properties
   (properties 
@@ -24,8 +24,7 @@
     ""
     (admin "" "" "")
     (database "" "" "" "")
-    (theme "" 30 "")
-    '()
+    (theme "")
     '()
     ))
 

@@ -1,7 +1,7 @@
 #lang s-exp wordpress
 
 (name "Hello Example")
-(url "Hello Example")
+(url "local.hello.com")
 (path "./output")
 
 (admin

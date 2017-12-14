@@ -5,16 +5,19 @@
 
 ;; reference: https://github.com/aqui18/wordpress-lang/blob/76180de1ecde3d0c73013f0382baf835432cc07d/src/re/install.re
 
-(provide run)
+(provide build theme)
 
-(define (run)
-  (let* ([! run-pipeline]
-         [props (p:properties-param)]
+(define ! run-pipeline)
+
+(define (build)
+  (let* ([props (p:properties-param)]
          [name (p:properties-name props)]
+         [id (p:properties-id props)]
          [path (p:properties-path props)]
          [admin (p:properties-admin props)]
          [plugins (p:properties-plugins props)]
          [database (p:properties-database props)]
+         [theme (p:properties-theme props)]
          [wp-content (string-append path "/wp-content")]
          [--path (string-append "--path=" path )]
          [--url (string-append "--url=" (p:properties-url props))]
@@ -31,9 +34,8 @@
     (! `(wp config create ,--path ,--dbhost ,--dbname ,--dbuser ,--dbpass))
     (! `(wp db reset --yes ,--path))
     (! `(wp core install ,--path ,--url ,--title ,--admin_user ,--admin_pass ,--admin_email))
-
-    ;;TODO copy template files over
-    ;;TODO active theme
+    (! `(cp -r ,(p:theme-src theme) ,(string-append wp-content "/themes/" id)))
+    (! `(wp theme activate ,id ,--path))
 
     (for-each
       (lambda [p]
@@ -44,3 +46,17 @@
            (! `(wp plugin install ,p ,--path)))
          (! `(wp plugin activate ,p ,--path)))) 
       plugins)))
+
+(define (theme)
+  (let* ([props (p:properties-param)]
+         [id (p:properties-id props)]
+         [path (p:properties-path props)]
+         [theme (p:properties-theme props)]
+         [wp-content (string-append path "/wp-content")]
+         [src (p:theme-src theme)]
+         [dst (string-append wp-content "/themes/" id)]
+         [--path (string-append "--path=" path )])
+    (! `(rm -rf ,dst))
+    (! `(cp -r ,src ,dst))
+    (! `(wp theme activate ,id ,--path))))
+
