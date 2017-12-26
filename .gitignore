@@ -3,4 +3,5 @@ output-ssh/
 _build/
 *.install
 .merlin
+compiled/
 
