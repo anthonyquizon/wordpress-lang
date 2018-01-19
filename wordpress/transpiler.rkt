@@ -1,4 +1,5 @@
 #lang racket
+
 (require racket/format
          racket/match) 
 
@@ -46,6 +47,11 @@
   ;;TODO make name php safe
   (format "$~a = ~a;" name (rewrite binding)))
 
+(define (define-lambda->php name args body)
+  (define args^ (list->php "," args))
+  (define body^ (list->php ";" body))
+  (format "function ~a(~a) { ~a }" name args^ body^))
+
 ;;TODO pass in env 
 (define (rewrite sexp)
   (match sexp
@@ -60,22 +66,12 @@
     [(list 'if p a b) (if-else->php p a b)]
     [(list 'list xs ...) (list->array_php xs)]
     [(list 'foldl xs ...) (rewrite `(array_reduce ,@xs))]
+    [(list 'map xs ...) (rewrite `(array_map ,@xs))]
+    [(list 'define (list name args ...) body) (define-lambda->php name args body)]
     [(list 'define name binding) (define->php name binding)]
     [(list name args ...) (app->php name args)] ;;TODO check if symbol
     ;;TODO hashtable
     [a a]
-    )
-  )
-
-;; fold -> fold_left
-;; map -> fold_left . []
-
-;; functions -> php_fn
-;;  shuffle
-;;  preg_replace
-;;  get_field
-
-
-;;eg
+    )) 
 
 ;;TODO tests
