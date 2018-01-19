@@ -20,6 +20,14 @@
 (define (list->array_php xs)
   (format "array(~a)" (list->php "," xs)))
 
+(define (hash->array_php xs)
+  (define xs^
+    (map (lambda (x)
+           (match-define `(,k ,v) x)
+           (define v^ (rewrite v))
+           (format "'~a' => ~a" k v^)) xs))
+  (format "array~a" (intersperse "," xs^)))
+
 ;;TODO parse body without (+ 1 x) != { +; 1; x; }
 
 (define (lambda->php args body)
@@ -67,11 +75,18 @@
     [(list 'list xs ...) (list->array_php xs)]
     [(list 'foldl xs ...) (rewrite `(array_reduce ,@xs))]
     [(list 'map xs ...) (rewrite `(array_map ,@xs))]
+    [(list 'displayln xs ...) (rewrite `(echo ,@xs))]
     [(list 'define (list name args ...) body) (define-lambda->php name args body)]
     [(list 'define name binding) (define->php name binding)]
     [(list name args ...) (app->php name args)] ;;TODO check if symbol
+    [(hash-table xs ...) (hash->array_php xs)] 
+    ;;TODO object get $x->foo
+    ;;TODO array get foo[0], foo["test"], foo[$a]
     ;;TODO hashtable
     [a a]
     )) 
 
+(module+ tests
+  
+  )
 ;;TODO tests
