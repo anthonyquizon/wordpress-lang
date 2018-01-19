@@ -24,7 +24,7 @@
 (define (body->php xs)
   (cond
     [(null? xs) ""]
-    [(null? (cdr xs)) (format "return ~a" (rewrite (car xs)))]
+    [(null? (cdr xs)) (format "return ~a;" (rewrite (car xs)))]
     [else 
       (format "~a; ~a" (rewrite (car xs)) (body->php (cdr xs)))]))
 (define (lambda->php args body)
@@ -62,6 +62,11 @@
 (define (index->php arr key)
   (format "$~a['~a']" arr key))
 
+(define (boolean->php p)
+  (if p "true" "false"))
+
+;;TODO expand
+;;TODO true and false
 (define (rewrite sexp)
   (match sexp
     [(list 'lambda args body ...) (lambda->php args body)]
@@ -84,6 +89,7 @@
     [(list name args ...) #:when (symbol? name) (app->php name args)] 
     [(hash-table xs ...) (hash->array_php xs)] 
     [str #:when (string? str) (format "'~a'" str)]
+    [p #:when (boolean? p) (boolean->php p)]
     [a a])) 
 
 (module+ tests
