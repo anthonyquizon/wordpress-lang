@@ -60,6 +60,12 @@
   (define body^ (list->php ";" body))
   (format "function ~a(~a) { ~a }" name args^ body^))
 
+(define (get->php obj key)
+  (format "$~a->~a" obj key))
+
+(define (index->php arr key)
+  (format "$~a['~a']" arr key))
+
 ;;TODO pass in env 
 (define (rewrite sexp)
   (match sexp
@@ -72,6 +78,8 @@
     [(list '/ a b) (infix->php '/ a b)]
     [(list 'if p a) (if->php p a)]
     [(list 'if p a b) (if-else->php p a b)]
+    [(list 'get obj key) (get->php obj key)]
+    [(list 'index arr key) (index->php arr key)]
     [(list 'list xs ...) (list->array_php xs)]
     [(list 'foldl xs ...) (rewrite `(array_reduce ,@xs))]
     [(list 'map xs ...) (rewrite `(array_map ,@xs))]
@@ -82,7 +90,6 @@
     [(hash-table xs ...) (hash->array_php xs)] 
     ;;TODO object get $x->foo
     ;;TODO array get foo[0], foo["test"], foo[$a]
-    ;;TODO hashtable
     [a a]
     )) 
 
