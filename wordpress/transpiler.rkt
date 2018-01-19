@@ -4,21 +4,14 @@
          racket/match) 
 
 (define (intersperse sep xs)
-  (cond
-    [(null? xs) '()]
-    [(null? (cdr xs)) xs]
-    [else (cons (car xs)
-                (cons sep
-                      (intersperse sep (cdr xs))))]))
+  (string-join (map ~a xs) sep))
 
-(define (list->php sep xs)
+(define (list->php xs)
   (define xs^ (map (curry rewrite) xs))
-  (define xs^^ (intersperse sep xs^))
-  (define f ((curry format) "~a"))
-  (string-join (map f xs^^)))
+  (intersperse "," xs^))
 
 (define (list->array_php xs)
-  (format "array(~a)" (list->php "," xs)))
+  (format "array(~a)" (list->php xs)))
 
 (define (hash->array_php xs)
   (define xs^
@@ -28,19 +21,22 @@
            (format "'~a' => ~a" k v^)) xs))
   (format "array~a" (intersperse "," xs^)))
 
-;;TODO parse body without (+ 1 x) != { +; 1; x; }
-
+(define (body->php xs)
+  (cond
+    [(null? xs) ""]
+    [(null? (cdr xs)) (format "return ~a" (rewrite (car xs)))]
+    [else 
+      (format "~a; ~a" (rewrite (car xs)) (body->php (cdr xs)))]))
 (define (lambda->php args body)
-  (define args^ (list->php "," args))
-  (define body^ (list->php ";" body))
+  (define args^ (list->php args))
+  (define body^ (body->php body))
   (format "function(~a) { ~a }" args^ body^))
 
 (define (equal?->php a b)
   (format "~a == ~a"  (rewrite a) (rewrite b)))
 
 (define (app->php name args)
-  (format "~a(~a);" name (list->php "," args)))
-
+  (format "~a(~a);" name (list->php args)))
 
 (define (infix->php op a b)
   (format "(~a ~a ~a)" (rewrite a) op (rewrite b)))
@@ -56,8 +52,8 @@
   (format "$~a = ~a;" name (rewrite binding)))
 
 (define (define-lambda->php name args body)
-  (define args^ (list->php "," args))
-  (define body^ (list->php ";" body))
+  (define args^ (list->php args))
+  (define body^ (body->php body))
   (format "function ~a(~a) { ~a }" name args^ body^))
 
 (define (get->php obj key)
@@ -66,10 +62,9 @@
 (define (index->php arr key)
   (format "$~a['~a']" arr key))
 
-;;TODO pass in env 
 (define (rewrite sexp)
   (match sexp
-    [(list 'lambda args body) (lambda->php args body)]
+    [(list 'lambda args body ...) (lambda->php args body)]
     [(list 'equal? a b) (equal?->php a b)]
     [(list '== a b) (equal?->php a b)]
     [(list '+ a b) (infix->php '+ a b)]
@@ -84,16 +79,13 @@
     [(list 'foldl xs ...) (rewrite `(array_reduce ,@xs))]
     [(list 'map xs ...) (rewrite `(array_map ,@xs))]
     [(list 'displayln xs ...) (rewrite `(echo ,@xs))]
-    [(list 'define (list name args ...) body) (define-lambda->php name args body)]
+    [(list 'define (list name args ...) body ...) (define-lambda->php name args body)]
     [(list 'define name binding) (define->php name binding)]
-    [(list name args ...) (app->php name args)] ;;TODO check if symbol
+    [(list name args ...) #:when (symbol? name) (app->php name args)] 
     [(hash-table xs ...) (hash->array_php xs)] 
-    ;;TODO object get $x->foo
-    ;;TODO array get foo[0], foo["test"], foo[$a]
-    [a a]
-    )) 
+    [str #:when (string? str) (format "'~a'" str)]
+    [a a])) 
 
 (module+ tests
-  
+  ;;TODO
   )
-;;TODO tests
