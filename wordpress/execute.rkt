@@ -34,6 +34,8 @@
     (! `(wp core download ,--path))
     (! `(wp config create ,--path ,--dbhost ,--dbname ,--dbuser ,--dbpass))
 
+    ;(! `(wp db reset --yes ,--path))
+
     (! `(wp core install ,--path ,--url ,--title ,--admin_user ,--admin_pass ,--admin_email))
     (! `(wp rewrite structure ,permalinks ,--path))
     

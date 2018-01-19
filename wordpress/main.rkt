@@ -23,10 +23,8 @@
   (#%module-begin
     expr ...
     ;;TODO command line args
+    ;;     sync from live
     ;;     build
     ;;     theme
     ;;     watch theme
     (e:build)))
-
-
-
