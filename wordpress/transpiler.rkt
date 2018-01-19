@@ -36,7 +36,7 @@
   (format "~a == ~a"  (rewrite a) (rewrite b)))
 
 (define (app->php name args)
-  (format "~a(~a);" name (list->php args)))
+  (format "~a(~a);" (rewrite name) (list->php args)))
 
 (define (infix->php op a b)
   (format "(~a ~a ~a)" (rewrite a) op (rewrite b)))
@@ -66,7 +66,6 @@
   (if p "true" "false"))
 
 ;;TODO expand
-;;TODO true and false
 (define (rewrite sexp)
   (match sexp
     [(list 'lambda args body ...) (lambda->php args body)]
@@ -80,16 +79,17 @@
     [(list 'if p a b) (if-else->php p a b)]
     [(list 'get obj key) (get->php obj key)]
     [(list 'index arr key) (index->php arr key)]
+    [(list 'quote xs) (list->array_php xs)]
     [(list 'list xs ...) (list->array_php xs)]
-    [(list 'foldl xs ...) (rewrite `(array_reduce ,@xs))]
-    [(list 'map xs ...) (rewrite `(array_map ,@xs))]
-    [(list 'displayln xs ...) (rewrite `(echo ,@xs))]
     [(list 'define (list name args ...) body ...) (define-lambda->php name args body)]
     [(list 'define name binding) (define->php name binding)]
     [(list name args ...) #:when (symbol? name) (app->php name args)] 
     [(hash-table xs ...) (hash->array_php xs)] 
     [str #:when (string? str) (format "'~a'" str)]
     [p #:when (boolean? p) (boolean->php p)]
+    ['foldl "array_reduce"]
+    ['map "array_map"]
+    ['displayln "echo"]
     [a a])) 
 
 (module+ tests
