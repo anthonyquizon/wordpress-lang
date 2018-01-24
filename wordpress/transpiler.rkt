@@ -3,6 +3,9 @@
 (require racket/format
          racket/match) 
 
+(provide rewrite 
+         php-call)
+
 (define (intersperse sep xs)
   (string-join (map ~a xs) sep))
 
@@ -48,7 +51,8 @@
   (format "if (~a) { ~a } else { ~a; }" (rewrite p) (rewrite a) (rewrite b)))
 
 (define (define->php name binding)
-  ;;TODO make name php safe
+  (define name^ (string-replace name "-" "_"))
+  ;;add binding and name to environment
   (format "$~a = ~a;" name (rewrite binding)))
 
 (define (define-lambda->php name args body)
@@ -65,7 +69,13 @@
 (define (boolean->php p)
   (if p "true" "false"))
 
-;;TODO expand
+(define (php-call name . args) 
+  `(php-call ,name ,@args))
+
+;;TODO filter -> array_values
+
+;;TODO expand -> pass in environment to find fill in define
+;; define pass first -> then others
 (define (rewrite sexp)
   (match sexp
     [(list 'lambda args body ...) (lambda->php args body)]
@@ -78,19 +88,23 @@
     [(list 'if p a) (if->php p a)]
     [(list 'if p a b) (if-else->php p a b)]
     [(list 'get obj key) (get->php obj key)]
-    [(list 'index arr key) (index->php arr key)]
+    [(list 'list-ref arr key) (index->php arr key)]
     [(list 'quote xs) (list->array_php xs)]
     [(list 'list xs ...) (list->array_php xs)]
     [(list 'define (list name args ...) body ...) (define-lambda->php name args body)]
     [(list 'define name binding) (define->php name binding)]
-    [(list name args ...) #:when (symbol? name) (app->php name args)] 
+    [(list 'php-call name args ...) #:when (symbol? name) (app->php name args)] 
     [(hash-table xs ...) (hash->array_php xs)] 
     [str #:when (string? str) (format "'~a'" str)]
     [p #:when (boolean? p) (boolean->php p)]
     ['foldl "array_reduce"]
     ['map "array_map"]
     ['displayln "echo"]
-    [a a])) 
+    [a a]
+    ;;TODO reduce if possible
+    )) 
+
+;; lisp -> html template
 
 (module+ tests
   ;;TODO

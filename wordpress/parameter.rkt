@@ -8,7 +8,7 @@
   (src))
 
 (struct database
-  (host name user pass))
+  (host name name-test user pass))
 
 (struct admin
   (user pass email))
@@ -24,7 +24,7 @@
     "" 
     ""
     (admin "" "" "")
-    (database "" "" "" "")
+    (database "" "" "" "" "")
     (theme "")
     '()
     ))

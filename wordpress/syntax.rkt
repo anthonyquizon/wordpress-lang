@@ -42,6 +42,7 @@
               (match x
                 [`(host ,v) (struct-copy p:database acc [host v])]
                 [`(name ,v) (struct-copy p:database acc [name v])]
+                [`(name-test ,v) (struct-copy p:database acc [name-test v])]
                 [`(user ,v) (struct-copy p:database acc [user v])]
                 [`(pass ,v) (struct-copy p:database acc [pass v])]))]
          [props (p:properties-param)]
