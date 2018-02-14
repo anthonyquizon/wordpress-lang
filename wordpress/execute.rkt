@@ -78,7 +78,8 @@
       plugins)))
 
 (define (setup-theme)
-  (s:with-config (id --path theme-src theme-dst)
+  (s:with-config (id path --path theme-src)
+    (define theme-dst (format "~a/wp-content/themes/~a" path id))
     (! `(rm -rf ,theme-dst))
     (! `(cp -r ,theme-src ,theme-dst))
     (! `(wp theme activate ,id ,--path))))
