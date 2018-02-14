@@ -1,6 +1,7 @@
 #lang racket
 
 (require shell/pipeline
+         (prefix-in db: db)
          (prefix-in p: "parameter.rkt")
          (prefix-in s: "syntax.rkt"))
 
@@ -44,8 +45,19 @@
    (! `(rm -rf ,path))
    (! `(wp core download ,--path))))
 
+(define (setup-db-mysql)
+  (s:with-config (dbname dbuser dbpass dbhost)
+    (define mysql-conn
+      (db:mysql-connect #:user dbuser
+                        #:server dbhost
+                        #:password dbpass))
+
+    (define query (format "CREATE DATABASE IF NOT EXISTS ~a" dbname))
+    (db:query-exec mysql-conn query)))
+
 (define (setup-db)
   (s:with-config (--path --dbhost --dbname --dbpass --dbuser)
+    (setup-db-mysql)
     (! `(wp config create ,--path ,--dbhost ,--dbname ,--dbuser ,--dbpass))))
 
 (define (setup-install)
