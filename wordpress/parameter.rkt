@@ -29,6 +29,6 @@
     '()
     ))
 
-(define properties-param 
+(define current-properties 
   (make-parameter default-properties))
 

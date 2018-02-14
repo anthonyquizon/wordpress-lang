@@ -22,9 +22,11 @@
 (define-syntax-rule (module-begin expr ...)
   (#%module-begin
     expr ...
-    ;;TODO command line args
-    ;;     sync from live
-    ;;     build
-    ;;     theme
-    ;;     watch theme
-    (e:build)))
+    (module+ main
+      ;;TODO command line args
+      ;;     sync from live
+      ;;     build
+      ;;     theme
+      ;;     watch theme
+      (e:build))
+    ))
