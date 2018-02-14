@@ -2,13 +2,14 @@
 
 (require (prefix-in p: "parameter.rkt")
          (for-syntax (prefix-in p: "parameter.rkt"))
-         (for-syntax threading))
+         threading)
 
 (provide (all-defined-out))
 
 (module+ test
   (require rackunit))
 
+;;; TODO create macro to match struct values
 (define-syntax-rule (name x)
   (let* ([props (p:current-properties)]
          [props^ (struct-copy p:properties props 
@@ -31,7 +32,6 @@
          [props^ (struct-copy p:properties props [permalinks p])])
     (p:current-properties props^)))
 
-;;; TODO create macro to match struct values
 (define-syntax-rule (admin xs ...)
   (let* ([f (lambda [x acc] 
               (match x
@@ -69,33 +69,34 @@
          [props^ (struct-copy p:properties props [plugins '(xs ...)])])
     (p:current-properties props^)))
 
+(define-syntax-rule (with-props (xs ...))
+  (~>> (p:current-properties) xs ...))
 
 (define-for-syntax 
   (match-id id)
-  (define props (p:current-properties))
   (case id 
-    ['name (p:properties-name props)]
-    ['id (p:properties-id props)]
-    ['path (p:properties-path props)]
-    ['permalinks (p:properties-permalinks props)]
-    ['admin (p:properties-admin props)]
-    ['plugins (p:properties-plugins props)]
-    ['database (p:properties-database props)]
-    ['theme (p:properties-theme props)]
-    ['theme-src (~> props p:theme-src p:properties-theme )]
-    ['theme-dst (format "~a/wp-content/themes/~a" (p:properties-id props))]
-    ['wp-content (format "~a/wp-content" (p:properties-path props))]
-    ['--path (format "--path=~a" (p:properties-path props))]
-    ['--url (format "--url=~a" (p:properties-url props))]
-    ['--title (format "--title=~a" (p:properties-name props))]
-    ['--admin_user (format "--admin_user=~a" (~> props p:properties-admin p:admin-user))]
-    ['--admin_pass (format "--admin_password=~a" (~> props p:properties-admin p:admin-pass))]
-    ['--admin_email (format "--admin_email=~a" (~> props p:properties-admin p:admin-email))]
-    ['--dbhost (format "--dbhost=~a" (~> props p:properties-database p:database-host))]
-    ['--dbname (format "--dbname=~a" (~> props p:properties-database p:database-name))]
-    ['--dbuser (format "--dbuser=~a" (~> props p:properties-database p:database-user))]
-    ['--dbpass (format "--dbpass=~a" (~> props p:properties-database p:database-pass))]
-    [else null]))
+    ['name '(p:properties-name)]
+    ['id '(p:properties-id)]
+    ['path '(p:properties-path)]
+    ['permalinks '(p:properties-permalinks)]
+    ['admin '(p:properties-admin)]
+    ['plugins '(p:properties-plugins)]
+    ['database '(p:properties-database)]
+    ['theme '(p:properties-theme)]
+    ['theme-src '(p:theme-src p:properties-theme)]
+    ['theme-dst '(p:properties-id (format "~a/wp-content/themes/~a"))]
+    ['wp-content '(p:properties-path (format "~a/wp-content"))]
+    ['--path '(p:properties-path (format "--path=~a"))]
+    ['--url '(p:properties-url (format "--url=~a"))]
+    ['--title '(p:properties-name (format "--title=~a"))]
+    ['--admin_user '(p:properties-admin p:admin-user (format "--admin_user=~a"))]
+    ['--admin_pass '(p:properties-admin p:admin-pass (format "--admin_password=~a"))]
+    ['--admin_email '(p:properties-admin p:admin-email (format "--admin_email=~a"))]
+    ['--dbhost '(p:properties-database p:database-host (format "--dbhost=~a"))]
+    ['--dbname '(p:properties-database p:database-name (format "--dbname=~a"))]
+    ['--dbuser '(p:properties-database p:database-user (format "--dbuser=~a"))]
+    ['--dbpass '(p:properties-database p:database-pass (format "--dbpass=~a"))]
+    [else '(identity)]))
 
 (define-for-syntax 
   (match-ids ids) 
@@ -106,10 +107,18 @@
       [(_ (id ...) xs ...)
        (with-syntax  
          ([(id-vals ...) (match-ids #'(id ...))])
-       #`(begin
-           (define id id-vals) ...
-           xs ...
-           ))]))
+       #`(let ([id (with-props id-vals)]) ...
+           xs ...))]))
 
 (module+ test
-  )
+  (before 
+    (name "test")
+    (check-equal?
+      (with-config (name) name)
+      "test"))
+
+  (before 
+    (path "test-path")
+    (check-equal?
+      (with-config (--path) --path)
+      "--path=test-path")))
