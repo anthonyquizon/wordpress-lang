@@ -12,6 +12,7 @@
          setup-plugins)
 
 (define ! run-pipeline)
+(define current-id (make-parameter 0))
 
 (define (build)
   (setup-files)
@@ -53,16 +54,16 @@
     (! `(wp rewrite structure ,permalinks ,--path))))
 
 (define (setup-plugins)
-  (s:with-config (wp-content plugins --path))
+  (s:with-config (wp-content plugins --path)
     (for-each
       (lambda [p]
         (let ([plugin-src (format "./plugins/~a" p)]
               [plugin-dst (format "~a/plugins" wp-content)])
-         (if (directory-exists? plugin-src)
-           (! `(cp -r ,plugin-src ,plugin-dst))
-           (! `(wp plugin install ,p ,--path)))
-         (! `(wp plugin activate ,p ,--path)))) 
-      plugins))
+          (if (directory-exists? plugin-src)
+            (! `(cp -r ,plugin-src ,plugin-dst))
+            (! `(wp plugin install ,p ,--path)))
+          (! `(wp plugin activate ,p ,--path)))) 
+      plugins)))
 
 (define (setup-theme)
   (s:with-config (id --path theme-src theme-dst)
