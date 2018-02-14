@@ -15,9 +15,7 @@
   [host "127.0.0.1"]
   [name "local_hello_com"]
   [user "root"]
-  [pass "root"]
-  ;;TODO import cached db
-  )
+  [pass "root"])
 
 ;;TODO copy uploads
 

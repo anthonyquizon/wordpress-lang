@@ -86,6 +86,7 @@
     ['theme-src '(p:theme-src p:properties-theme)]
     ['theme-dst '(p:properties-id (format "~a/wp-content/themes/~a"))]
     ['wp-content '(p:properties-path (format "~a/wp-content"))]
+    ['wp-config '(p:properties-path (format "~a/wp-config.php"))]
     ['--path '(p:properties-path (format "--path=~a"))]
     ['--url '(p:properties-url (format "--url=~a"))]
     ['--title '(p:properties-name (format "--title=~a"))]
@@ -107,7 +108,7 @@
       [(_ (id ...) xs ...)
        (with-syntax  
          ([(id-vals ...) (match-ids #'(id ...))])
-       #`(let ([id (with-props id-vals)]) ...
+       #`(let ([id (with-props id-vals)] ...) 
            xs ...))]))
 
 (module+ test
@@ -120,5 +121,6 @@
   (before 
     (path "test-path")
     (check-equal?
-      (with-config (--path) --path)
-      "--path=test-path")))
+      (with-config (path --path) `(,path ,--path))
+      '("test-path" "--path=test-path"))))
+

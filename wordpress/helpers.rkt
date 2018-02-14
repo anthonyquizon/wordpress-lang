@@ -21,9 +21,19 @@
             (port->string in-b)))))))
 
 (define (reset-properties)
-  (p:properties-param p:default-properties))
+  (p:current-properties p:default-properties))
 
 (define (setup-dir dir)
   (run-pipeline `(rm -r ,dir)) 
   (run-pipeline `(mkdir -p ,dir)))
+
+(define (endpoint uri #:data [data #f] #:method [method #"GET"])
+  (define-values (status headers in)
+    (http-sendrecv host uri
+                   #:method method
+                   #:data data))
+  ;;TODO 
+  (displayln (port->string in))
+  (~> in port->string string->jsexpr))
+
 

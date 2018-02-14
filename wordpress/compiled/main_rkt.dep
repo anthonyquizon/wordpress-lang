@@ -1,1 +1,0 @@
-("6.11" ("7ee715bd8bf0598d5ccf00921adcbd8bd04f2c7a" . "c9f8ab2c6ae2d97df05dcfcb6ed1b350f4bcc8d1") (collects #"br" #"main.rkt") (collects #"br" #"quicklang.rkt") (collects #"racket" #"runtime-config.rkt") (collects #"wordpress" #"lang" #"reader.rkt"))

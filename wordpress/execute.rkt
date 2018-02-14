@@ -19,6 +19,24 @@
   (setup-install)
   (setup-theme)
   (setup-plugins))
+  
+(define (create-test-db posts)
+  (s:with-config (--path)
+    (replace-config)
+    (! `(wp db reset --yes ,--path)) 
+    (setup-install)
+    ;;for each post -> insert
+    ))
+
+(define (replace-config)
+  (s:with-config (wp-config)
+    (! `(mv ,wp-config ,(format "~a.bak" wp-config)))
+    (setup-db)))
+
+(define (restore-install)
+  (s:with-config (wp-config)
+    (! `(rm ,wp-config))
+    (! `(mv ,(format "~a.bak" wp-config)  ,wp-config))))
 
 (define (setup-files)
   (s:with-config (path --path)
@@ -51,4 +69,15 @@
     (! `(rm -rf ,theme-dst))
     (! `(cp -r ,theme-src ,theme-dst))
     (! `(wp theme activate ,id ,--path))))
+
+(define (insert! type) 
+  (define offset (current-id))
+  (for-each 
+    (lambda (i) 
+      (define title (string-append type " " (number->string i)))
+      (define id (number->string (+ offset i)))
+      (! `(wp post create --post-type=,type --post-title=,title --post-ID=,id)))
+    (range 10)))
+
+
 
