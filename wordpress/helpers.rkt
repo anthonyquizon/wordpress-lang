@@ -35,13 +35,14 @@
 
 (define (endpoint uri #:data [data #f] #:method [method #"GET"])
   (s:with-config (host)
-     (define-values (status headers in)
-       (http-sendrecv host uri
-                      #:method method
-                      #:data data))
-     ;;TODO display error
-     (displayln (port->string in))
-     (~> in port->string string->jsexpr)))
+    (define-values (status headers in)
+      (http-sendrecv host uri
+                     #:method method
+                     #:data data))
+
+    (when (not (equal? #"HTTP/1.1 200 OK" status))
+      (displayln (port->string in)))
+    (~> in port->string string->jsexpr)))
 
 (define (set-flag flag value)
   (string->symbol (format "--~a='~a'" flag value)))

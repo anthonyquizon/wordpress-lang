@@ -26,6 +26,12 @@
   (setup-theme)
   (setup-plugins))
   
+
+(define (clean-initial-posts)
+  (s:with-config (--path) 
+    (displayln "deleting hello world post")
+    (! `(wp post delete 1 ,--path))))
+
 (define (create-test-db posts terms)
   (s:with-config (--path)
     (replace-config)
@@ -33,8 +39,10 @@
     (setup-install)
     (setup-theme)
     (setup-plugins)
+    (clean-initial-posts)
     (insert-posts posts)
     (insert-terms terms)))
+
 
 (define (replace-config)
   (s:with-config (wp-config)
@@ -104,18 +112,19 @@
 (define (insert-posts posts) 
   (s:with-config (--path)
     (define (f props)
-      (define --guid (format "--guid=~a" (hash-ref props 'ID "1234")))
+      (define --import_id (format "--import_id=~a" (hash-ref props 'ID "1234")))
       (define --post_type (post-prop->flag props 'type "post"))
       (define --post_title (post-prop->flag props 'title "post title"))
       (define --post_status (post-prop->flag props 'status "publish"))
-      (define --post_tax_input (post-prop->flag props 'content "{}"))
+      (define --post_tax_input (post-prop->flag props 'tax_input ""))
       (define --post_content (post-prop->flag props 'content "lorem ipsum content"))
       (define --post_excerpt (post-prop->flag props 'excerpt "lorem ipsum excerpt"))
       (define cmd `(wp post create 
                        ,--path 
-                       ,--guid
+                       ,--import_id
                        ,--post_type 
                        ,--post_title 
+                       ,--post_tax_input
                        ,--post_status 
                        ,--post_content 
                        ,--post_excerpt))

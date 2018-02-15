@@ -89,7 +89,7 @@
     ['dbhost '(p:properties-database p:database-host)]
     ['theme '(p:properties-theme)]
     ['theme-src '(p:properties-theme p:theme-src)]
-    ['host '(p:properties-url (format "http://~a"))]
+    ['host '(p:properties-url)]
     ['wp-content '(p:properties-path (format "~a/wp-content"))]
     ['wp-config '(p:properties-path (format "~a/wp-config.php"))]
     ['--path '(p:properties-path (format "--path=~a"))]
