@@ -25,6 +25,6 @@
 ;; NOTE: searches first in ./plugins folder 
 ;;       then tries to download via wp cli
 (plugins
-  "wordpress-importer"
+  ["wordpress-importer" "./plugins/wordpress-importer"]
   "wp-super-cache")
 

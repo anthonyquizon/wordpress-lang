@@ -8,6 +8,8 @@
 
 (provide build 
          create-test-db
+         replace-config
+         restore-config
          setup-files
          setup-db
          setup-install
@@ -24,19 +26,22 @@
   (setup-theme)
   (setup-plugins))
   
-(define (create-test-db posts)
+(define (create-test-db posts terms)
   (s:with-config (--path)
     (replace-config)
     (! `(wp db reset --yes ,--path)) 
     (setup-install)
-    (insert! posts)))
+    (setup-theme)
+    (setup-plugins)
+    (insert-posts posts)
+    (insert-terms terms)))
 
 (define (replace-config)
   (s:with-config (wp-config)
     (! `(mv ,wp-config ,(format "~a.bak" wp-config)))
     (setup-db)))
 
-(define (restore-install)
+(define (restore-config)
   (s:with-config (wp-config)
     (! `(rm ,wp-config))
     (! `(mv ,(format "~a.bak" wp-config)  ,wp-config))))
@@ -66,17 +71,24 @@
     (! `(wp core install ,--path ,--url ,--title ,--admin_user ,--admin_pass ,--admin_email))
     (! `(wp rewrite structure ,permalinks ,--path))))
 
+(define (install-plugin plugin)
+  (s:with-config (--path wp-content)
+    (define dst (format "~a/plugins" wp-content))
+
+    (match plugin
+      [(list name src) 
+       (if (directory-exists? src)
+         (begin 
+           (! `(cp -r ,src ,dst))
+           (! `(wp plugin activate ,name ,--path)))
+         (displayln (format "Cannot find ~a in ~a" name src)))]
+      [name 
+        (! `(wp plugin install ,name ,--path)) 
+        (! `(wp plugin activate ,name ,--path))])))
+
 (define (setup-plugins)
-  (s:with-config (wp-content plugins --path)
-    (for-each
-      (lambda [p]
-        (let ([plugin-src (format "./plugins/~a" p)]
-              [plugin-dst (format "~a/plugins" wp-content)])
-          (if (directory-exists? plugin-src)
-            (! `(cp -r ,plugin-src ,plugin-dst))
-            (! `(wp plugin install ,p ,--path)))
-          (! `(wp plugin activate ,p ,--path)))) 
-      plugins)))
+  (s:with-config (plugins)
+    (for-each install-plugin plugins)))
 
 (define (setup-theme)
   (s:with-config (id path --path theme-src)
@@ -89,25 +101,39 @@
   (define prop (hash-ref props key default))
   (h:set-flag (format "post_~a" key) prop))
 
-
-(define (insert! posts) 
+(define (insert-posts posts) 
   (s:with-config (--path)
     (define (f props)
-      (define --post-type (post-prop->flag props 'type "post"))
-      (define --post-title (post-prop->flag props 'title "post title"))
-      (define --post-status (post-prop->flag props 'status "publish"))
-      (define --post-content (post-prop->flag props 'content "lorem ipsum content"))
-      (define --post-excerpt (post-prop->flag props 'excerpt "lorem ipsum excerpt"))
+      (define --guid (format "--guid=~a" (hash-ref props 'ID "1234")))
+      (define --post_type (post-prop->flag props 'type "post"))
+      (define --post_title (post-prop->flag props 'title "post title"))
+      (define --post_status (post-prop->flag props 'status "publish"))
+      (define --post_tax_input (post-prop->flag props 'content "{}"))
+      (define --post_content (post-prop->flag props 'content "lorem ipsum content"))
+      (define --post_excerpt (post-prop->flag props 'excerpt "lorem ipsum excerpt"))
       (define cmd `(wp post create 
                        ,--path 
-                       ,--post-type 
-                       ,--post-title 
-                       ,--post-status 
-                       ,--post-content 
-                       ,--post-excerpt))
+                       ,--guid
+                       ,--post_type 
+                       ,--post_title 
+                       ,--post_status 
+                       ,--post_content 
+                       ,--post_excerpt))
 
       (displayln cmd) 
       (! cmd))
 
     (for-each f posts)))
 
+(define (insert-terms terms) 
+  (s:with-config (--path)
+    (define (f term)
+      (define ID (hash-ref term 'ID))
+      (define taxonomy (hash-ref term 'taxonomy))
+      (define name (hash-ref term 'name))
+      (define cmd `(wp post term add ,--path ,ID ,taxonomy ,name))
+
+      (displayln cmd) 
+      (! cmd))
+
+    (for-each f terms)))

@@ -12,6 +12,7 @@
 (provide check-files-equal?
          setup-dir
          set-flag
+         endpoint
          reset-properties)
 
 (define (check-files-equal? a b)

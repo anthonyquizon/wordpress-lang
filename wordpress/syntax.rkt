@@ -23,8 +23,9 @@
     (p:current-properties props^)))
 
 (define-syntax-rule (path p)
-  (let* ([props (p:current-properties)]
-         [props^ (struct-copy p:properties props [path p])])
+  (let* ([p^ (format "~a/~a" (current-directory-for-user) p)]
+         [props (p:current-properties)]
+         [props^ (struct-copy p:properties props [path p^])])
     (p:current-properties props^)))
 
 (define-syntax-rule (permalinks p)
@@ -88,6 +89,7 @@
     ['dbhost '(p:properties-database p:database-host)]
     ['theme '(p:properties-theme)]
     ['theme-src '(p:properties-theme p:theme-src)]
+    ['host '(p:properties-url (format "http://~a"))]
     ['wp-content '(p:properties-path (format "~a/wp-content"))]
     ['wp-config '(p:properties-path (format "~a/wp-config.php"))]
     ['--path '(p:properties-path (format "--path=~a"))]
