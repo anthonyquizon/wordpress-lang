@@ -2,10 +2,12 @@
 
 (require shell/pipeline
          (prefix-in db: db)
+         (prefix-in h: "helpers.rkt")
          (prefix-in p: "parameter.rkt")
          (prefix-in s: "syntax.rkt"))
 
 (provide build 
+         create-test-db
          setup-files
          setup-db
          setup-install
@@ -27,8 +29,7 @@
     (replace-config)
     (! `(wp db reset --yes ,--path)) 
     (setup-install)
-    ;;for each post -> insert
-    ))
+    (insert! posts)))
 
 (define (replace-config)
   (s:with-config (wp-config)
@@ -84,14 +85,29 @@
     (! `(cp -r ,theme-src ,theme-dst))
     (! `(wp theme activate ,id ,--path))))
 
-(define (insert! type) 
-  (define offset (current-id))
-  (for-each 
-    (lambda (i) 
-      (define title (string-append type " " (number->string i)))
-      (define id (number->string (+ offset i)))
-      (! `(wp post create --post-type=,type --post-title=,title --post-ID=,id)))
-    (range 10)))
+(define (post-prop->flag props key default)
+  (define prop (hash-ref props key default))
+  (h:set-flag (format "post_~a" key) prop))
 
 
+(define (insert! posts) 
+  (s:with-config (--path)
+    (define (f props)
+      (define --post-type (post-prop->flag props 'type "post"))
+      (define --post-title (post-prop->flag props 'title "post title"))
+      (define --post-status (post-prop->flag props 'status "publish"))
+      (define --post-content (post-prop->flag props 'content "lorem ipsum content"))
+      (define --post-excerpt (post-prop->flag props 'excerpt "lorem ipsum excerpt"))
+      (define cmd `(wp post create 
+                       ,--path 
+                       ,--post-type 
+                       ,--post-title 
+                       ,--post-status 
+                       ,--post-content 
+                       ,--post-excerpt))
+
+      (displayln cmd) 
+      (! cmd))
+
+    (for-each f posts)))
 
