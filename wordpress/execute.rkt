@@ -14,9 +14,12 @@
          setup-db
          setup-install
          setup-theme
-         setup-plugins)
+         setup-plugins
+         get-term-id)
 
 (define ! run-pipeline)
+(define !/out run-pipeline/out)
+
 (define current-id (make-parameter 0))
 
 (define (build)
@@ -117,6 +120,7 @@
       (define --post_title (post-prop->flag props 'title "post title"))
       (define --post_status (post-prop->flag props 'status "publish"))
       (define --post_tax_input (post-prop->flag props 'tax_input ""))
+      (define --post_date (post-prop->flag props 'date ""))
       (define --post_content (post-prop->flag props 'content "lorem ipsum content"))
       (define --post_excerpt (post-prop->flag props 'excerpt "lorem ipsum excerpt"))
       (define cmd `(wp post create 
@@ -124,6 +128,7 @@
                        ,--import_id
                        ,--post_type 
                        ,--post_title 
+                       ,--post_date 
                        ,--post_tax_input
                        ,--post_status 
                        ,--post_content 
@@ -146,3 +151,10 @@
       (! cmd))
 
     (for-each f terms)))
+
+(define (get-term-id taxonomy term by)
+  (s:with-config (--path)
+    (define --by (format "--by=~a" by))
+    (define cmd `(wp term get ,taxonomy ,term ,--by --field=term_id ,--path))
+    (displayln cmd)
+    (string-trim (!/out cmd))))

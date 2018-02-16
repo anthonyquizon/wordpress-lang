@@ -45,5 +45,5 @@
     (~> in port->string string->jsexpr)))
 
 (define (set-flag flag value)
-  (string->symbol (format "--~a='~a'" flag value)))
+  (string->symbol (format "--~a=~a" flag value)))
 
